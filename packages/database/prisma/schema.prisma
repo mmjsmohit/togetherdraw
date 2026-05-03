@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(uuid())
+
+  // Boards created by this user
+  createdBoards Board[] @relation("BoardCreator")
+
+  // Memberships (many-to-many via join table)
+  memberships BoardMember[]
+
+  createdAt DateTime @default(now())
+}
+
+model Board {
+  id   String @id @default(uuid())
+  slug String @unique
+
+  // Creator relation (one-to-many)
+  creatorId String
+  creator   User   @relation("BoardCreator", fields: [creatorId], references: [id])
+
+  // Members (many-to-many via join table)
+  members BoardMember[]
+
+  createdAt DateTime @default(now())
+}
+
+model BoardMember {
+  id String @id @default(uuid())
+
+  userId  String
+  boardId String
+
+  user  User  @relation(fields: [userId], references: [id])
+  board Board @relation(fields: [boardId], references: [id])
+
+  joinedAt DateTime @default(now())
+
+  @@unique([userId, boardId]) // prevents duplicate membership
+}
