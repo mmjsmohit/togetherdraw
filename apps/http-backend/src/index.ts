@@ -1,4 +1,4 @@
-import express, { Request, Response, type Express } from "express";
+import express, { Request, Response } from "express";
 import { prisma } from "@repo/db";
 import jwt from "jsonwebtoken";
 import { authMiddleware } from "./authMiddleware";
@@ -16,6 +16,18 @@ const JWT_SECRET = process.env.JWT_SECRET || "";
 
 const app = express();
 
+app.use((req, res, next) => {
+  const allowedOrigin = process.env.CLIENT_ORIGIN || "http://localhost:3000";
+  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 app.use(express.json());
 // Create an anonymous login endpoint
 app.post("/anon-login", async (req: Request, res: Response) => {
@@ -26,7 +38,7 @@ app.post("/anon-login", async (req: Request, res: Response) => {
     // Create a JWT token to be stored locally on user's device
     const token = jwt.sign(
       {
-        id: user.id,
+        userId: user.id,
       },
       JWT_SECRET,
     );
@@ -47,15 +59,16 @@ app.post("/anon-login", async (req: Request, res: Response) => {
 // Create board
 app.post("/boards", authMiddleware, async (req: Request, res: Response) => {
   const id = req.userId;
-  const { slug } = req.body;
+  const { slug } = req.body as { slug?: string };
   // Require a slug
-  if (!slug) {
+  if (!slug?.trim()) {
     return res.status(400).json({ message: "Slug is required" });
   }
+  const normalizedSlug = slug.trim();
   // Check if slug already exists
   const boardCheck = await prisma.board.findUnique({
     where: {
-      slug: slug,
+      slug: normalizedSlug,
     },
   });
 
@@ -66,11 +79,22 @@ app.post("/boards", authMiddleware, async (req: Request, res: Response) => {
   }
 
   try {
-    const board = await prisma.board.create({
-      data: {
-        slug: slug,
-        creatorId: id,
-      },
+    const board = await prisma.$transaction(async (tx) => {
+      const createdBoard = await tx.board.create({
+        data: {
+          slug: normalizedSlug,
+          creatorId: id,
+        },
+      });
+
+      await tx.boardMember.create({
+        data: {
+          boardId: createdBoard.id,
+          userId: id,
+        },
+      });
+
+      return createdBoard;
     });
 
     res.status(200).json({
@@ -94,13 +118,40 @@ app.get("/boards", authMiddleware, async (req: Request, res: Response) => {
   });
 });
 
+// Get a board by slug
+app.get(
+  "/boards/:slug",
+  authMiddleware,
+  async (req: Request, res: Response) => {
+    const { slug } = req.params as { slug: string };
+
+    const board = await prisma.board.findUnique({
+      where: {
+        slug: slug,
+      },
+      select: {
+        id: true,
+        slug: true,
+        creatorId: true,
+        content: true,
+        createdAt: true,
+      },
+    });
+
+    if (!board) {
+      return res.status(404).json({ message: "Board not found" });
+    }
+
+    res.status(200).json({ board });
+  },
+);
+
 // Delete a board
 app.delete(
   "/boards/:slug",
   authMiddleware,
   async (req: Request, res: Response) => {
-    const { slug } = req.body;
-    const { userId } = req;
+    const { slug } = req.params as { slug: string };
 
     // Check if the user is the creator of the board
     const board = await prisma.board.findUnique({
@@ -147,14 +198,16 @@ app.post(
     if (!board) {
       return res.status(404).json({ message: "Board not found" });
     }
-    if (board.creatorId === userId) {
-      return res.status(400).json({
-        message:
-          "You are the creator of this board and already a member of the board",
-      });
-    }
-    await prisma.boardMember.create({
-      data: {
+
+    await prisma.boardMember.upsert({
+      where: {
+        userId_boardId: {
+          boardId: board.id,
+          userId: userId,
+        },
+      },
+      update: {},
+      create: {
         boardId: board.id,
         userId: userId,
       },
@@ -171,6 +224,10 @@ app.post(
     const { slug } = req.params as { slug: string };
     const { content } = req.body as { content: string };
     const { userId } = req;
+
+    if (typeof content !== "string") {
+      return res.status(400).json({ message: "Content is required" });
+    }
 
     const board = await prisma.board.findUnique({
       where: {

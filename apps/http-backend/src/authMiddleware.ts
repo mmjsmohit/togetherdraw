@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
 
@@ -8,12 +8,25 @@ export function authMiddleware(
   res: Response,
   next: NextFunction,
 ) {
-  const token = req.headers.authorization?.split(" ")[0];
+  const authorization = req.headers.authorization;
+  const token = authorization?.startsWith("Bearer ")
+    ? authorization.slice("Bearer ".length)
+    : authorization;
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }
-  const decoded = jwt.verify(token, JWT_SECRET);
-  // @ts-ignore
-  req.userId = (decoded as { id: string })?.id;
-  next();
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (typeof decoded === "string") {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    const userId = (decoded as JwtPayload).userId ?? (decoded as JwtPayload).id;
+    if (typeof userId !== "string") {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    req.userId = userId;
+    next();
+  } catch {
+    return res.status(401).json({ message: "Invalid token" });
+  }
 }
