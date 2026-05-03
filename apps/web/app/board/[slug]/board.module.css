@@ -1,0 +1,199 @@
+.boardPage {
+  background: #f8fafc;
+  color: #0f172a;
+  height: 100svh;
+  overflow: hidden;
+  position: relative;
+}
+
+.topBar {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  gap: 16px;
+  height: 64px;
+  justify-content: space-between;
+  left: 0;
+  padding: 0 18px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
+}
+
+.boardMeta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.boardMeta strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.boardLabel {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.topActions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.topActions button,
+.errorPage button {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  color: #0f172a;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  gap: 7px;
+  height: 38px;
+  justify-content: center;
+  padding: 0 12px;
+}
+
+.topActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.connectionStatus {
+  align-items: center;
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+  color: #166534;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 800;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+}
+
+.memberPanel {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.12);
+  display: grid;
+  gap: 10px;
+  max-width: 220px;
+  padding: 12px;
+  position: absolute;
+  right: 18px;
+  top: 80px;
+  z-index: 8;
+}
+
+.memberHeader {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.memberHeader span {
+  color: #64748b;
+}
+
+.memberList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.memberList span {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  color: #334155;
+  font-family: var(--font-geist-mono);
+  font-size: 12px;
+  padding: 4px 7px;
+}
+
+.saveStatus {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  bottom: 18px;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.12);
+  color: #475569;
+  font-size: 13px;
+  font-weight: 750;
+  left: 18px;
+  min-height: 36px;
+  padding: 9px 12px;
+  position: absolute;
+  z-index: 8;
+}
+
+.inlineError {
+  color: #b91c1c;
+}
+
+.canvasLoading,
+.loadingPage,
+.errorPage {
+  align-items: center;
+  background: #f8fafc;
+  color: #334155;
+  display: flex;
+  font-weight: 750;
+  gap: 10px;
+  height: 100svh;
+  justify-content: center;
+}
+
+.errorPage {
+  flex-direction: column;
+  padding: 20px;
+  text-align: center;
+}
+
+.spinIcon {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .topBar {
+    align-items: flex-start;
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+  }
+
+  .topActions {
+    flex-wrap: wrap;
+  }
+
+  .connectionStatus {
+    height: 38px;
+  }
+
+  .memberPanel {
+    left: 12px;
+    right: auto;
+    top: 124px;
+  }
+}

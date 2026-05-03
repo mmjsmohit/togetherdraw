@@ -1,0 +1,117 @@
+.canvasShell {
+  background-color: #f8fafc;
+  background-image:
+    linear-gradient(#e2e8f0 1px, transparent 1px),
+    linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+  background-size: 32px 32px;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.toolbar,
+.zoomControls {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.12);
+  display: flex;
+  gap: 6px;
+  position: absolute;
+  z-index: 7;
+}
+
+.toolbar {
+  left: 18px;
+  padding: 6px;
+  top: 80px;
+}
+
+.zoomControls {
+  bottom: 18px;
+  padding: 6px;
+  right: 18px;
+}
+
+.toolbar button,
+.zoomControls button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  color: #334155;
+  cursor: pointer;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.toolbar button:hover,
+.zoomControls button:hover {
+  background: #f1f5f9;
+}
+
+.toolbar .activeTool {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.zoomControls span {
+  color: #475569;
+  font-family: var(--font-geist-mono);
+  font-size: 13px;
+  font-weight: 800;
+  min-width: 48px;
+  text-align: center;
+}
+
+.remoteCursors {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 6;
+}
+
+.remoteCursor {
+  align-items: center;
+  color: #2563eb;
+  display: flex;
+  gap: 6px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  will-change: transform;
+}
+
+.remoteCursor svg {
+  fill: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.2));
+}
+
+.remoteCursor span {
+  background: #2563eb;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 6px;
+  transform: translate(2px, 12px);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .toolbar {
+    flex-direction: column;
+    left: 12px;
+    top: 224px;
+  }
+
+  .zoomControls {
+    bottom: 12px;
+    right: 12px;
+  }
+}

@@ -11,10 +11,15 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@liveblocks/client": "^3.18.5",
+    "@liveblocks/react": "^3.18.5",
     "@repo/ui": "workspace:*",
+    "konva": "^10.3.0",
+    "lucide-react": "^1.14.0",
     "next": "16.2.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-konva": "^19.2.3"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
