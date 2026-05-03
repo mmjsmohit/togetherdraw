@@ -32,6 +32,9 @@ model Board {
   creatorId String
   creator   User   @relation("BoardCreator", fields: [creatorId], references: [id])
 
+  // Base64 encoded content of the board
+  content String?
+
   // Members (many-to-many via join table)
   members BoardMember[]
 
