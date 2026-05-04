@@ -19,9 +19,10 @@ config({
 });
 
 const { prisma } = await import("@repo/db");
+const PORT = Number(process.env.PORT || 4001);
 
 const wss = new WebSocketServer({
-  port: 4001,
+  port: PORT,
 });
 
 const boards = new Map<string, Map<WebSocket, string>>();

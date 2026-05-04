@@ -13,10 +13,10 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ensureAnonSession,
+  getWebSocketUrl,
   getBoard,
   joinBoard,
   saveBoardContent,
-  WS_URL,
 } from "../../../lib/api";
 import {
   decodeBoardContent,
@@ -215,9 +215,7 @@ export default function BoardPageClient({ slug }: { slug: string }) {
         setElements(decodeBoardContent(fetchedBoard.content).elements);
         setIsDirty(false);
 
-        const socket = new WebSocket(
-          `${WS_URL}?token=${encodeURIComponent(activeSession.token)}`,
-        );
+        const socket = new WebSocket(getWebSocketUrl(activeSession.token));
         wsRef.current = socket;
 
         socket.addEventListener("open", () => {

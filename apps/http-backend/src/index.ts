@@ -13,6 +13,7 @@ declare global {
 }
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
+const PORT = Number(process.env.PORT || 4000);
 
 const app = express();
 
@@ -264,6 +265,6 @@ app.post(
 
 // Upload an image and get the S3 URL
 
-app.listen(4000, (port) => {
-  console.log("Server is running on port 4000");
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

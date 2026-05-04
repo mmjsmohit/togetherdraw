@@ -2,6 +2,7 @@
 set -eu
 
 pids=""
+public_port="${PORT:-3000}"
 
 start_service() {
   name="$1"
@@ -26,9 +27,9 @@ stop_services() {
 
 trap 'stop_services; exit 143' INT TERM
 
-start_service "http-backend" "/prod/http-backend" pnpm start
-start_service "ws-backend" "/prod/ws-backend" pnpm start
-start_service "web" "/prod/web" env HOSTNAME=0.0.0.0 PORT=3000 pnpm start
+start_service "http-backend" "/prod/http-backend" env PORT=4000 pnpm start
+start_service "ws-backend" "/prod/ws-backend" env PORT=4001 pnpm start
+start_service "web" "/prod/web" env HOSTNAME=0.0.0.0 PORT="${public_port}" pnpm start
 
 set +e
 wait -n

@@ -1,12 +1,43 @@
 import type { Board, Session } from "./board-types";
 
 const SESSION_STORAGE_KEY = "togetherdraw.session";
+const LOCAL_HTTP_API_URL = "http://localhost:4000";
+const LOCAL_WS_URL = "ws://localhost:4001";
 
-export const HTTP_API_URL =
-  process.env.NEXT_PUBLIC_HTTP_API_URL || "http://localhost:4000";
+function trimTrailingSlash(url: string) {
+  return url.replace(/\/+$/, "");
+}
 
-export const WS_URL =
-  process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:4001";
+function isLocalHost(hostname: string) {
+  return hostname === "localhost" || hostname === "127.0.0.1";
+}
+
+function getHttpApiUrl() {
+  if (process.env.NEXT_PUBLIC_HTTP_API_URL) {
+    return trimTrailingSlash(process.env.NEXT_PUBLIC_HTTP_API_URL);
+  }
+
+  if (typeof window !== "undefined" && !isLocalHost(window.location.hostname)) {
+    return window.location.origin;
+  }
+
+  return LOCAL_HTTP_API_URL;
+}
+
+export function getWebSocketUrl(token: string) {
+  const query = `token=${encodeURIComponent(token)}`;
+
+  if (process.env.NEXT_PUBLIC_WS_URL) {
+    return `${trimTrailingSlash(process.env.NEXT_PUBLIC_WS_URL)}?${query}`;
+  }
+
+  if (typeof window !== "undefined" && !isLocalHost(window.location.hostname)) {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${protocol}//${window.location.host}/ws?${query}`;
+  }
+
+  return `${LOCAL_WS_URL}?${query}`;
+}
 
 function readStoredSession(): Session | null {
   const rawSession = window.localStorage.getItem(SESSION_STORAGE_KEY);
@@ -46,7 +77,7 @@ export async function ensureAnonSession(): Promise<Session> {
     return existingSession;
   }
 
-  const response = await fetch(`${HTTP_API_URL}/anon-login`, {
+  const response = await fetch(`${getHttpApiUrl()}/anon-login`, {
     method: "POST",
   });
   const session = await parseResponse<Session>(response);
@@ -65,7 +96,7 @@ export async function apiRequest<T>(
     headers.set("Content-Type", "application/json");
   }
 
-  const response = await fetch(`${HTTP_API_URL}${path}`, {
+  const response = await fetch(`${getHttpApiUrl()}${path}`, {
     ...init,
     headers,
   });
