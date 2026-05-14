@@ -32,6 +32,9 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
+      tsx:
+        specifier: ^4.19.1
+        version: 4.21.0
     devDependencies:
       '@repo/typescript-config':
         specifier: workspace:*
@@ -42,9 +45,6 @@ importers:
       '@types/node':
         specifier: ^22.5.0
         version: 22.15.3
-      tsx:
-        specifier: ^4.19.1
-        version: 4.21.0
 
   apps/web:
     dependencies:
@@ -118,6 +118,9 @@ importers:
       nuqs:
         specifier: ^2.8.9
         version: 2.8.9(next@16.2.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+      tsx:
+        specifier: ^4.19.1
+        version: 4.21.0
       ws:
         specifier: ^8.20.0
         version: 8.20.0
@@ -128,9 +131,6 @@ importers:
       '@types/node':
         specifier: ^22.5.0
         version: 22.15.3
-      tsx:
-        specifier: ^4.19.1
-        version: 4.21.0
 
   packages/database:
     dependencies:

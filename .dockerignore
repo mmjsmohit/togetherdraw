@@ -3,4 +3,13 @@ npm_debug.log
 .git
 .gitignore
 *.md
+.next
+**/.next
+.turbo
+**/.turbo
+.env
+.env.*
+**/.env
+**/.env.*
 dist
+**/dist

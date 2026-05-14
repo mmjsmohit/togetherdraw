@@ -11,8 +11,7 @@
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.5.0",
-    "tsx": "^4.19.1"
+    "@types/node": "^22.5.0"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
@@ -21,6 +20,7 @@
     "dotenv": "^17.4.2",
     "jsonwebtoken": "^9.0.3",
     "nuqs": "^2.8.9",
+    "tsx": "^4.19.1",
     "ws": "^8.20.0"
   }
 }

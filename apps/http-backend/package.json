@@ -12,13 +12,13 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/express": "^5.0.6",
-    "@types/node": "^22.5.0",
-    "tsx": "^4.19.1"
+    "@types/node": "^22.5.0"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
     "@types/jsonwebtoken": "^9.0.10",
     "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "tsx": "^4.19.1"
   }
 }

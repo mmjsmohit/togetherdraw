@@ -1,5 +1,8 @@
 import "dotenv/config";
-import { PrismaClient } from "../generated/prisma/client.js";
+// Prisma's `prisma-client` generator emits TypeScript files, and the backend
+// runtime loads this package through `tsx`.
+// @ts-expect-error TS-only generated Prisma client import
+import { PrismaClient } from "../generated/prisma/client.ts";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const adapter = new PrismaPg({

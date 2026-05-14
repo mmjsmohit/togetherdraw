@@ -11,6 +11,9 @@ RUN pnpm run build
 RUN pnpm deploy --filter=@repo/http-backend --prod /prod/http-backend
 RUN pnpm deploy --filter=@repo/ws-backend --prod /prod/ws-backend
 RUN pnpm deploy --filter=web --prod /prod/web
+RUN cp -R packages/database/generated /prod/http-backend/node_modules/@repo/db/generated
+RUN cp -R packages/database/generated /prod/ws-backend/node_modules/@repo/db/generated
+RUN cp -R apps/web/.next /prod/web/.next
 
 FROM base AS app1
 COPY --from=build /prod/http-backend /prod/http-backend
